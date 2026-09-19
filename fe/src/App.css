@@ -1,0 +1,70 @@
+.react-calendar{
+  width:100%!important;
+  background:transparent!important;
+  border:none!important;
+  font-family: var(--font-sans)!important;
+}
+.react-calendar__navigation{
+  display:flex; gap:8px; margin-bottom:18px;
+}
+.react-calendar__navigation button{
+  min-width:42px!important;
+  height:42px!important;
+  border-radius:999px!important;
+  border:1px solid var(--border)!important;
+  background:var(--surface)!important;
+  color:var(--text)!important;
+  font-weight:600!important;
+  font-size:15px!important;
+  transition:.2s;
+}
+.react-calendar__navigation button:enabled:hover{background:var(--surface2)!important}
+.react-calendar__navigation__label{
+  flex:1!important; font-weight:600!important; letter-spacing:-.02em; font-size:15px!important; text-transform:capitalize;
+  background:transparent!important; border:none!important;
+}
+.react-calendar__month-view__weekdays{
+  font-size:12.5px!important;
+  letter-spacing:.07em;
+  color:var(--text3)!important;
+  font-weight:600!important;
+  font-family:var(--font-mono)!important;
+  text-transform:uppercase!important;
+}
+.react-calendar__month-view__weekdays abbr{text-decoration:none!important}
+.react-calendar__tile{
+  height:86px!important;
+  display:flex!important;
+  flex-direction:column!important;
+  align-items:flex-start!important;
+  justify-content:flex-start!important;
+  padding:10px 8px!important;
+  border-radius:14px!important;
+  background:transparent!important;
+  color:var(--text)!important;
+  font-weight:500!important;
+  font-size:15px!important;
+  border:1px solid transparent!important;
+  transition:.15s!important;
+}
+.react-calendar__tile:enabled:hover{background:var(--surface2)!important}
+.react-calendar__tile--now{
+  background:var(--accent-soft)!important;
+}
+.react-calendar__tile--now abbr{
+  background:var(--text);
+  color:var(--bg);
+  width:26px; height:26px;
+  display:grid; place-items:center;
+  border-radius:999px;
+  margin:-1px 0 2px -1px;
+}
+.react-calendar__tile--active{
+  background:var(--text)!important;
+  color:var(--bg)!important;
+}
+.react-calendar__tile--active abbr{background:transparent!important; color:inherit!important; width:auto; height:auto}
+.react-calendar__month-view__days__day--neighboringMonth{color:var(--text3)!important; opacity:.45}
+@media(max-width:640px){
+  .react-calendar__tile{height:68px!important}
+}

@@ -1,0 +1,44 @@
+@import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&display=swap');
+@import "tailwindcss";
+
+@theme{
+  --font-display: "Instrument Serif", serif;
+  --font-sans: "Geist", system-ui, sans-serif;
+  --font-mono: "Geist Mono", monospace;
+  --font-serif: "Newsreader", serif;
+}
+
+:root{
+  --bg: #FCFCF9;
+  --surface:#FFFFFF;
+  --surface2:#F5F5F4;
+  --border:#E7E5E4;
+  --border2:#D6D3D1;
+  --text:#1C1917;
+  --text2:#57534E;
+  --text3:#A8A29E;
+  --accent:#0EA5E9;
+  --accent2:#0284C7;
+  --accent-soft: rgba(14,165,233,0.08);
+}
+[data-theme="dark"]{
+  --bg:#0C0A09;
+  --surface:#1C1917;
+  --surface2:#292524;
+  --border:#292524;
+  --border2:#44403C;
+  --text:#FAFAF9;
+  --text2:#A8A29E;
+  --text3:#78716C;
+  --accent:#38BDF8;
+  --accent2:#7DD3FC;
+  --accent-soft: rgba(56,189,248,0.09);
+}
+*{scrollbar-width:thin; scrollbar-color: var(--border2) transparent}
+html{scroll-behavior:smooth}
+body{
+  background:var(--bg);
+  color:var(--text);
+  -webkit-font-smoothing:antialiased;
+}
+::selection{background: color-mix(in srgb, var(--accent) 18%, transparent)}
