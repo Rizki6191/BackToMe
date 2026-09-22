@@ -6,7 +6,7 @@ import gsap from 'gsap';
 import './App.css';
 
 const LOGO = 'https://cdn.simpleicons.org/react/0EA5E9';
-const API = 'http://localhost:1337';
+const API = 'https://backtome-api.vercel.app';
 
 const catColor = (c='')=>{
   const s=c.toLowerCase();
