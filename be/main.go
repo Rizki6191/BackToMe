@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"log"
+	"os"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -69,6 +70,14 @@ func main() {
 	})
 	// ------------------------------------------
 
-	fmt.Printf("Server Gin berjalan di port %s...\n", cfg.AppPort)
-	r.Run(":" + cfg.AppPort)
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = cfg.AppPort
+	}
+
+	fmt.Printf("Server Gin berjalan di port %s...\n", port)
+
+	if err := r.Run(":" + port); err != nil {
+		log.Fatal(err)
+	}
 }
