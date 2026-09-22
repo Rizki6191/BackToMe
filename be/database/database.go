@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"log"
 
-	"gorm.io/driver/sqlite"
+	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
 
@@ -13,7 +13,7 @@ import (
 )
 
 func Connect(cfg *config.Config) (*gorm.DB, error) {
-	db, err := gorm.Open(sqlite.Open(cfg.DBPath), &gorm.Config{
+	db, err := gorm.Open(postgres.Open(cfg.DatabaseURL), &gorm.Config{
 		Logger: logger.Default.LogMode(logger.Info),
 	})
 	if err != nil {
@@ -25,6 +25,6 @@ func Connect(cfg *config.Config) (*gorm.DB, error) {
 		return nil, fmt.Errorf("gagal auto migrate database: %w", err)
 	}
 
-	log.Println("Database SQLite terhubung dan migrasi berhasil!")
+	log.Println("Database PostgreSQL terhubung dan migrasi berhasil!")
 	return db, nil
 }

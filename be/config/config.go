@@ -7,10 +7,10 @@ import (
 )
 
 type Config struct {
-	AppPort        string
-	AppEnv         string
-	DBPath         string
-	TelegramToken  string
+	AppPort       string
+	AppEnv        string
+	DatabaseURL   string
+	TelegramToken string
 }
 
 func Load() (*Config, error) {
@@ -19,7 +19,7 @@ func Load() (*Config, error) {
 	return &Config{
 		AppPort:       getEnv("APP_PORT", "8080"),
 		AppEnv:        getEnv("APP_ENV", "development"),
-		DBPath:        getEnv("DB_PATH", "./schedule.db"),
+		DatabaseURL:   getEnv("DATABASE_URL", ""),
 		TelegramToken: getEnv("TELEGRAM_TOKEN", ""),
 	}, nil
 }
