@@ -59,10 +59,19 @@ func main() {
 
 	// --- ENDPOINT KHUSUS UNTUK CRON-JOB.ORG ---
 	r.GET("/cron/check", func(c *gin.Context) {
-		// Menjalankan fungsi pengecekan reminder Anda
+		auth := c.GetHeader("Authorization")
+		expected := "Bearer " + cfg.CronSecret
+
+		if cfg.CronSecret == "" || auth != expected {
+			c.JSON(401, gin.H{
+				"status":  "unauthorized",
+				"message": "invalid cron secret",
+			})
+			return
+		}
+
 		scheduleHandler.CheckReminders()
 
-		// Memberikan respon sukses ke cron-job.org
 		c.JSON(200, gin.H{
 			"status":  "success",
 			"message": "Reminder check executed successfully",

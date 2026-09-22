@@ -11,6 +11,7 @@ type Config struct {
 	AppEnv        string
 	DatabaseURL   string
 	TelegramToken string
+	CronSecret    string
 }
 
 func Load() (*Config, error) {
@@ -21,6 +22,7 @@ func Load() (*Config, error) {
 		AppEnv:        getEnv("APP_ENV", "development"),
 		DatabaseURL:   getEnv("DATABASE_URL", ""),
 		TelegramToken: getEnv("TELEGRAM_TOKEN", ""),
+		CronSecret:    getEnv("CRON_SECRET", ""),
 	}, nil
 }
 
