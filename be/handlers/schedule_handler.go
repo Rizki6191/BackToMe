@@ -64,7 +64,7 @@ func (h *ScheduleHandler) CreateSchedule(c *gin.Context) {
 
 	// Kirim Notifikasi Telegram secara asinkron (goroutine) jika token tersedia
 	if h.Cfg.TelegramToken != "" && s.ChatID != "" {
-		go h.sendTelegramNotification(s)
+		h.sendTelegramNotification(s)
 	}
 
 	c.JSON(http.StatusOK, gin.H{"message": "Jadwal berhasil ditambahkan!", "data": s})
@@ -109,48 +109,86 @@ func (h *ScheduleHandler) sendTelegramNotification(s models.Schedule) {
 	defer resp.Body.Close()
 }
 
+func reminderSlot(t time.Time) time.Time {
+	minute := t.Minute()
+
+	if minute < 30 {
+		minute = 0
+	} else {
+		minute = 30
+	}
+
+	return time.Date(
+		t.Year(),
+		t.Month(),
+		t.Day(),
+		t.Hour(),
+		minute,
+		0,
+		0,
+		t.Location(),
+	)
+}
+
 // Fungsi untuk mengecek jadwal dan mengirim reminder otomatis
 func (h *ScheduleHandler) CheckReminders() {
 	var schedules []models.Schedule
+
 	if err := h.DB.Find(&schedules).Error; err != nil {
+		fmt.Println("Gagal mengambil jadwal:", err)
 		return
 	}
 
-	// Waktu server saat ini
 	now := time.Now()
 
+	// Waktu sekarang dibulatkan ke slot 30 menit:
+	// 12:00 - 12:29 -> 12:00
+	// 12:30 - 12:59 -> 12:30
+	currentSlot := reminderSlot(now)
+
 	for _, s := range schedules {
-		// Parsing tanggal dan jam dari database
 		scheduleTimeStr := fmt.Sprintf("%s %s", s.Date, s.Time)
-		scheduleTime, err := time.ParseInLocation("2006-01-02 15:04", scheduleTimeStr, time.Local)
+
+		scheduleTime, err := time.ParseInLocation(
+			"2006-01-02 15:04",
+			scheduleTimeStr,
+			time.Local,
+		)
+
 		if err != nil {
+			fmt.Println("Gagal parsing waktu jadwal:", err)
 			continue
 		}
 
-		// Hitung selisih waktu dalam satuan MENIT
-		diff := scheduleTime.Sub(now)
-		minutesRemaining := int(diff.Minutes()) // Konversi ke integer menit
+		// Tentukan waktu reminder
+		reminder3Days := scheduleTime.Add(-72 * time.Hour)
+		reminder1Day := scheduleTime.Add(-24 * time.Hour)
+		reminder3Hours := scheduleTime.Add(-3 * time.Hour)
+		reminder1Hour := scheduleTime.Add(-1 * time.Hour)
 
-		// Karena cron berjalan setiap 3 menit, kita beri toleransi jendela 3 menit (0 sampai 3 menit)
-		// Ini menjamin notifikasi HANYA terkirim 1x dalam rentang menit tersebut.
+		// Masukkan target ke slot 30 menit
+		reminder3DaysSlot := reminderSlot(reminder3Days)
+		reminder1DaySlot := reminderSlot(reminder1Day)
+		reminder3HoursSlot := reminderSlot(reminder3Hours)
+		reminder1HourSlot := reminderSlot(reminder1Hour)
 
-		// 1. Reminder H-3 Hari (3 hari = 4320 menit)
-		if minutesRemaining >= 4317 && minutesRemaining <= 4320 {
+		// H-3 Hari
+		if currentSlot.Equal(reminder3DaysSlot) {
 			h.sendReminderNotification(s, "3 Hari Lagi 🗓️")
 		}
 
-		// 2. Reminder H-1 Hari (1 hari = 1440 menit)
-		if minutesRemaining >= 1437 && minutesRemaining <= 1440 {
+		// H-1 Hari
+		if currentSlot.Equal(reminder1DaySlot) {
 			h.sendReminderNotification(s, "1 Hari Lagi (Besok!) ⚠️")
 		}
 
-		// 3. Reminder 3 Jam Sebelumnya (3 jam = 180 menit)
-		if minutesRemaining >= 177 && minutesRemaining <= 180 {
+		// 3 Jam
+		if currentSlot.Equal(reminder3HoursSlot) {
 			h.sendReminderNotification(s, "3 Jam Lagi! ⏰")
 		}
 
-		// 4. Reminder 1 Jam Sebelumnya (1 jam = 60 menit)
-		if minutesRemaining >= 57 && minutesRemaining <= 60 {
+		// 1 Jam
+		if currentSlot.Equal(reminder1HourSlot) {
 			h.sendReminderNotification(s, "1 Jam Lagi! ⏰")
 		}
 	}
