@@ -183,7 +183,7 @@ export default function App(){
       <div className="max-w-[1160px] mx-auto px-6 md:px-8 pt-10 md:pt-14 pb-8">
         <div className="grid grid-cols-12 gap-6 md:gap-8 items-end">
           <div className="col-span-12 lg:col-span-7">
-            <p className="reveal font-mono text-[13.5px] tracking-[0.12em] uppercase mb-4" style={{color:'var(--text3)'}}>personal scheduler · react × telegram</p>
+            <p className="reveal font-mono text-[13.5px] tracking-[0.12em] uppercase mb-4" style={{color:'var(--text3)'}}>personal scheduler</p>
             <h1 className="reveal font-display text-[44px] md:text-[60px] leading-[0.92] tracking-[-0.03em] font-normal">
               Tempatku<br/>
               <span className="italic font-normal" style={{color:'var(--text2)'}}>merapikan</span> hari<br/>
